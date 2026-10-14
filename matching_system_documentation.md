@@ -201,4 +201,4 @@ python run_evaluation.py
 python -m pytest -q
 ```
 
-On 14 October 2026, Python 3.14 was available. The six malformed source rows were corrected in a generated copy, the baseline ran, four standard-library pipeline/API tests and the three matcher test functions passed. Pytest itself was unavailable because package-registry DNS failed. Current counts and caveats are in `docs/DATASET.md` and `results/baseline_results.json`.
+On 14 October 2026, Python 3.14 was available. The six malformed source rows were corrected in a generated copy, the baseline ran, five standard-library pipeline/API/image tests and the three matcher test functions passed. Pytest itself was unavailable because package-registry DNS failed. Current counts and caveats are in `docs/DATASET.md` and `results/baseline_results.json`.

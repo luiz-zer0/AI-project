@@ -167,7 +167,7 @@ data class MatchCandidate(
 
 ## Verified status on 14 October 2026
 
-Python 3.14 is available. The original synthetic CSV has six shifted rows, so run the preparation script (or `run_evaluation.py`, which invokes it) before loading reports. The current baseline and split results are saved under `results/`. Four standard-library pipeline/API tests and the three existing matcher tests passed. The `pytest` package could not be installed in this environment because package-registry DNS was unavailable; a normal `python -m pytest -q` run remains outstanding.
+Python 3.14 is available. The original synthetic CSV has six shifted rows, so run the preparation script (or `run_evaluation.py`, which invokes it) before loading reports. The current baseline and split results are saved under `results/`. Five standard-library pipeline/API/image tests and the three existing matcher tests passed. The `pytest` package could not be installed in this environment because package-registry DNS was unavailable; a normal `python -m pytest -q` run remains outstanding.
 
 Run:
 
