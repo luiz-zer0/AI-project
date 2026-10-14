@@ -201,4 +201,4 @@ python run_evaluation.py
 python -m pytest -q
 ```
 
-Python was not available on this machine during implementation, so the tests have been written but not executed here.
+On 14 October 2026, Python 3.14 was available. The six malformed source rows were corrected in a generated copy, the baseline ran, four standard-library pipeline/API tests and the three matcher test functions passed. Pytest itself was unavailable because package-registry DNS failed. Current counts and caveats are in `docs/DATASET.md` and `results/baseline_results.json`.

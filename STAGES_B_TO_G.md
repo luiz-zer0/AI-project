@@ -55,7 +55,7 @@ Implemented file:
 
 Current status:
 
-- Image matching is intentionally disabled because the Stage A dataset has no images.
+- The ranker accepts optional precomputed image embeddings and a capped cosine-similarity bonus, but no image encoder, image data or image experiment is available locally.
 - The code records the planned approach: use a pretrained CLIP-style model later as supporting evidence only.
 
 Important rule:
@@ -165,14 +165,14 @@ data class MatchCandidate(
 )
 ```
 
-## Current Blocker
+## Verified status on 14 October 2026
 
-I could not run the Python evaluation or tests in this workspace because `python` is not installed or not available on PATH. The Windows launcher exists, but reports that no Python installation is available.
+Python 3.14 is available. The original synthetic CSV has six shifted rows, so run the preparation script (or `run_evaluation.py`, which invokes it) before loading reports. The current baseline and split results are saved under `results/`. Four standard-library pipeline/API tests and the three existing matcher tests passed. The `pytest` package could not be installed in this environment because package-registry DNS was unavailable; a normal `python -m pytest -q` run remains outstanding.
 
-Once Python is installed, the first verification commands should be:
+Run:
 
 ```powershell
-python -m pip install -r requirements.txt
+python scripts/prepare_campus_data.py
 python run_evaluation.py
 python -m pytest -q
 ```

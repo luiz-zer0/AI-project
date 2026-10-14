@@ -9,7 +9,7 @@ from .data_loader import load_reports
 from .matcher import rank_candidates
 from .models import Report
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "synthetic_campus_reports.csv"
+DATA_PATH = Path(__file__).resolve().parent.parent / "data/processed/synthetic_campus_reports.csv"
 
 app = FastAPI(title="Campus Lost and Found Matching API")
 
@@ -27,7 +27,9 @@ def health() -> dict[str, str]:
 
 @app.get("/reports")
 def list_reports() -> list[dict[str, object]]:
-    return [report.__dict__ for report in load_reports(DATA_PATH)]
+    # Prototype inventory excludes descriptions and proof-like details.
+    return [{"report_id": r.report_id, "report_type": r.report_type, "category": r.category, "status": r.status}
+            for r in load_reports(DATA_PATH)]
 
 
 @app.post("/matches")
@@ -51,6 +53,6 @@ def create_report_placeholder(report: dict[str, object]) -> dict[str, object]:
     return {
         "status": "not_persisted",
         "message": "Database persistence is intentionally deferred until the matching prototype is evaluated.",
-        "received_report": report,
+        "received_fields": sorted(report),
     }
 

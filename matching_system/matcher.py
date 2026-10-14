@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from .models import MatchCandidate, Report
 from .normalization import normalize_scalar, tokenize
+from .image_matching import cosine_similarity
 
 
 def jaccard(left: set[str], right: set[str]) -> float:
@@ -29,7 +30,7 @@ def time_score(lost: Report, found: Report) -> float:
     return 0.0
 
 
-def score_pair(lost: Report, found: Report) -> MatchCandidate:
+def score_pair(lost: Report, found: Report, image_embeddings: dict[str, tuple[float, ...]] | None = None) -> MatchCandidate:
     shared: list[str] = []
     conflicts: list[str] = []
     missing: list[str] = []
@@ -76,6 +77,15 @@ def score_pair(lost: Report, found: Report) -> MatchCandidate:
 
     score += 5 * time_score(lost, found)
 
+    if image_embeddings and lost.image_reference and found.image_reference:
+        left = image_embeddings.get(lost.image_reference)
+        right = image_embeddings.get(found.image_reference)
+        if left is not None and right is not None:
+            similarity = cosine_similarity(left, right)
+            if similarity > 0 and not conflicts:
+                score += min(10.0, 10.0 * similarity)
+                shared.append("supporting image similarity")
+
     score = round(max(0.0, min(100.0, score)), 2)
     explanation = build_explanation(score, shared, conflicts, missing)
     return MatchCandidate(
@@ -103,8 +113,9 @@ def rank_candidates(
     found_reports: list[Report],
     limit: int = 5,
     min_score: float = 30.0,
+    image_embeddings: dict[str, tuple[float, ...]] | None = None,
 ) -> list[MatchCandidate]:
-    candidates = [score_pair(lost, found) for found in found_reports if found.report_type == "found"]
+    candidates = [score_pair(lost, found, image_embeddings) for found in found_reports if found.report_type == "found"]
     candidates.sort(key=lambda item: item.score, reverse=True)
     return [candidate for candidate in candidates if candidate.score >= min_score][:limit]
 
