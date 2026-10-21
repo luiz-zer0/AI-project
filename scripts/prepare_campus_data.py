@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "synthetic_campus_reports.csv"
+SOURCE = ROOT / "data" / "raw" / "campus" / "synthetic_campus_reports.csv"
 OUTPUT = ROOT / "data" / "processed" / "synthetic_campus_reports.csv"
 
 

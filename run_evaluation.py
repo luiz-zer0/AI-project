@@ -12,7 +12,7 @@ def main() -> None:
     root = Path(__file__).resolve().parent
     correction = prepare()
     reports = load_reports(root / "data/processed/synthetic_campus_reports.csv")
-    labels = load_labelled_pairs(root / "labelled_campus_pairs.csv")
+    labels = load_labelled_pairs(root / "data/raw/campus/labelled_campus_pairs.csv")
     metrics = evaluate(reports, labels, k=3)
     metrics["synthetic_corrections"] = correction
     manifest = split()

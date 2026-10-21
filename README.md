@@ -1,31 +1,59 @@
-# AI-assisted campus lost and found matching prototype
+# Strathmore Lost and Found AI prototype
 
-The current system ranks possible found-item reports from a lost-item report, explains shared and conflicting details, and requires human ownership verification. It is a prototype; optional cosine similarity can contribute a small image score when precomputed embeddings for both reports are supplied, but no image encoder or image evaluation has been run. Persistent reporting, notifications and an Android application are not implemented.
+## Project objective
 
-## Data and reproducibility
+Compare one lost-item report with one found-item report and suggest pairs worth human review. A score never establishes ownership; authorised Lost and Found staff must verify a claim before an item is released.
 
-See [dataset provenance](docs/DATASET.md) and [labelling rules](docs/LABELLING_GUIDE.md). Root CSVs are the unchanged sources. Generated outputs go to `data/processed/`, `data/metadata/` or `results/`.
+## CAT 2 definition
 
-Install Python 3.11+ and then:
+**AI Application: Classification**
+
+**Algorithm/Approach: Logistic Regression**
+
+The supervised model classifies a report pair as `1 = match` or `0 = non-match`. The CAT 2 workflow is **raw data -> exploration -> cleaning -> EDA -> pair features -> Logistic Regression -> grouped validation -> evaluation**. Start with [LogisticRegression_Base.ipynb](LogisticRegression_Base.ipynb). Its outputs are from the synthetic dataset, not real campus performance.
+
+## Existing baseline and datasets
+
+The manually weighted matcher in `matching_system/matcher.py` is retained as the **Rule-Based Baseline**. It is not trained ML and still powers the small prototype API. The Logistic Regression experiment is offline; the API and Android starter do not use it yet.
+
+`matching_system_testing.ipynb` is a separate engineering notebook. `trial.ipynb` contains earlier exploration and historical outputs; use the CAT 2 notebook for current assessed results.
+
+* `data/raw/campus/synthetic_campus_reports.csv`: 46 synthetic reports, including six malformed source rows repaired in a generated copy.
+* `data/raw/campus/labelled_campus_pairs.csv`: 32 designed pairs (14 `match`, 8 `plausible`, 10 `non_match`). The CAT classifier maps `plausible` to class 0 as a coursework assumption and reports an exclusion sensitivity check. Unlabelled pairs remain unknown.
+* Delhi Metro: 13,713 real-world *found-item* records for data-quality exploration. The raw CSV is excluded from this branch's new commits because descriptions may contain personal details. Obtain your own copy from the source and place it at `data/raw/delhi/delhimetrorail.csv` before running the full notebook; see `docs/DATASET.md`. It has no verified lost/found pairs and cannot measure matching accuracy.
+* Future images: no downloaded Roboflow images, own same-item photographs, image encoder, or measured CLIP result. See `docs/IMAGE_DATASET_GUIDE.md`.
+
+Raw campus inputs are kept unchanged. Keep the Delhi CSV local and do not commit or redistribute it without a privacy review. Generated data goes under `data/processed/`; measured model outputs go under `results/ml/`. Dataset provenance and limits are in `docs/DATASET.md`.
+
+## Run CAT 2
+
+From the repository root, with Python 3.11+:
 
 ```powershell
 python -m pip install -r requirements.txt
-python scripts/prepare_campus_data.py
-python scripts/prepare_delhi_data.py
-python scripts/split_campus_data.py
+python -m scripts.run_cat2
+jupyter notebook LogisticRegression_Base.ipynb
+```
+
+The classifier command needs only the tracked campus files. For the full notebook, first download the Delhi Metro CSV as described in `docs/DATASET.md`, save it at `data/raw/delhi/delhimetrorail.csv`, and verify its SHA-256 hash. Run the notebook from first cell to last. `python -m scripts.run_cat2` regenerates the cleaned campus copy, `data/processed/modelling_pairs.csv`, grouped split, predictions, coefficients and `results/ml/validation_metrics.json`. Matplotlib creates EDA figures when installed. The current execution environment has pandas/scikit-learn but lacks Matplotlib/Jupyter, so the numeric notebook cells were executed here and figure creation must be verified in a full environment.
+
+To check the original rule-based baseline and available tests:
+
+```powershell
 python run_evaluation.py
+python -m unittest discover -s tests -p "test_*.py"
 python -m pytest -q
 uvicorn matching_system.api:app --reload
 ```
 
-`run_evaluation.py` also prepares the corrected campus copy and split manifest. It writes `results/baseline_results.json`. The FastAPI prototype serves `/health`, `/reports`, `/matches`, and a non-persisting `/reports` POST. It does not authenticate users or prove ownership; do not expose it publicly with sensitive reports.
+`pytest` is needed for the three function-style tests in `tests/test_matching.py`. The FastAPI endpoints use a static synthetic inventory; `POST /reports` does not save reports. Never expose this prototype publicly with sensitive reports. The `android/` folder is an app scaffold with no sign-in, reporting flow or API integration.
 
-Roboflow version 2 must be downloaded separately with attribution. After obtaining its YOLO export, install Pillow and run:
+## Current status and limitations
 
-```powershell
-python scripts/prepare_image_data.py data/raw/roboflow --output data/metadata/image_metadata.csv
-```
+**Implemented:** raw-data preparation, pair features, offline Logistic Regression training and grouped validation, synthetic test evaluation, rule-based matcher and prototype API.
 
-The image script inventories and validates files while preserving Roboflow's split. `matching_system/image_matching.py` can compare supplied vectors, and the ranker caps their supporting bonus at 10 points and suppresses it when structured fields conflict. A pretrained CLIP encoder, generated embeddings and hybrid image evaluation remain pending because no images or confirmed same-item image pairs are in this repository. The Delhi Metro file contains no images or verified lost-found pairs and is not used to calculate matching accuracy.
+**Partially implemented:** EDA figures require Matplotlib locally; labels have not had independent review.
 
-The labelled campus set is small and partly incomplete: unlabelled combinations are unknown, not confirmed false positives. Baseline numbers are synthetic-prototype checks, not production accuracy. See `STAGES_B_TO_G.md` for earlier implementation notes and `results/baseline_results.json` for current measured output.
+**Planned:** real-campus evaluation, image pairs and CLIP features, model comparison, durable backend and Android integration.
+
+The held-out check has eight synthetic pairs from four lost reports. Such a small, designed sample cannot support a production accuracy claim. See `docs/CAT2_WORKFLOW.md`, `docs/MODEL_EXPLANATION.md`, and `docs/NEXT_STEPS.md` for the presentation guide and next work.

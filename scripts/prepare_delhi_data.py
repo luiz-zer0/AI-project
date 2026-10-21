@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "delhimetrorail (1).csv"
+SOURCE = ROOT / "data" / "raw" / "delhi" / "delhimetrorail.csv"
 OUTPUT = ROOT / "data" / "processed" / "delhi_metro.csv"
 REPORT = ROOT / "data" / "processed" / "delhi_preprocessing_report.json"
 COLUMNS = ["item_name", "description", "item_quantity", "station_name", "receiving_date", "receiving_time"]
@@ -20,6 +20,11 @@ def normalize(value: str) -> str:
 
 
 def prepare(source: Path = SOURCE, output: Path = OUTPUT, report_path: Path = REPORT) -> dict:
+    if not source.is_file():
+        raise FileNotFoundError(
+            f"Delhi CSV missing at {source}. Download it from the source linked in "
+            "docs/DATASET.md and place it at this local, Git-ignored path."
+        )
     raw = source.read_bytes()
     with source.open(encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
