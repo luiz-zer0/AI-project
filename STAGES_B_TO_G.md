@@ -15,8 +15,8 @@ Implemented files:
 
 What it does:
 
-- Loads `synthetic_campus_reports.csv`.
-- Loads `labelled_campus_pairs.csv`.
+- Loads `data/raw/campus/synthetic_campus_reports.csv`.
+- Loads `data/raw/campus/labelled_campus_pairs.csv`.
 - Validates required CSV columns.
 - Normalizes common wording variants such as `blk` to `black`, `grey` to `gray`, `school bag` to `backpack`, and `USB-C` to `usb c`.
 - Scores lost-found pairs using:
@@ -135,7 +135,7 @@ The `POST /reports` endpoint is currently a placeholder. It accepts data but doe
 
 ## Stage G: Android Integration Plan
 
-Do not build the Android app until the API is stable. The Kotlin app should eventually:
+The Android project is now a starter scaffold; do not connect it to the API until backend persistence and permissions are stable. The Kotlin app should eventually:
 
 - Submit lost reports.
 - Submit found reports.

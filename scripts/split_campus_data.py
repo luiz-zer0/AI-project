@@ -11,7 +11,7 @@ SEED = 42
 
 
 def split() -> dict:
-    with (ROOT / "labelled_campus_pairs.csv").open(encoding="utf-8", newline="") as handle:
+    with (ROOT / "data" / "raw" / "campus" / "labelled_campus_pairs.csv").open(encoding="utf-8", newline="") as handle:
         pairs = list(csv.DictReader(handle))
     groups = defaultdict(set)
     for pair in pairs:

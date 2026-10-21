@@ -2,5 +2,15 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
-data/raw/roboflow/
+.vendor/
+data/raw/roboflow/*
+!data/raw/roboflow/README.md
+data/raw/campus_images/*
+!data/raw/campus_images/README.md
+data/raw/delhi/*.csv
+data/embeddings/*
+!data/embeddings/README.md
+models/*
+!models/README.md
 data/processed/delhi_metro.csv
+data/metadata/image_metadata.csv

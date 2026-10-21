@@ -30,7 +30,7 @@ def test_contradictory_colour_is_explained():
 
 def test_evaluation_metrics_are_measurable():
     reports = load_reports(REPORTS)
-    labels = load_labelled_pairs("labelled_campus_pairs.csv")
+    labels = load_labelled_pairs("data/raw/campus/labelled_campus_pairs.csv")
 
     metrics = evaluate(reports, labels, k=3)
 

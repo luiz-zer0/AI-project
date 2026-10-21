@@ -6,7 +6,7 @@ The immediate goal is to define and test the data foundation for a text-based lo
 
 At this stage, the system must not make ownership decisions. A high score should mean "worth human review", not "this item belongs to the claimant".
 
-The current real-world reference file is `delhimetrorail (1).csv`. It contains 13,713 found-item records with these fields:
+The current real-world reference file is `data/raw/delhi/delhimetrorail.csv`. It contains 13,713 found-item records with these fields:
 
 - `item_name`
 - `description`
@@ -80,10 +80,10 @@ Example report:
 
 Two synthetic CSV files have been created for the first text-matching prototype:
 
-- `synthetic_campus_reports.csv`
-- `labelled_campus_pairs.csv`
+- `data/raw/campus/synthetic_campus_reports.csv`
+- `data/raw/campus/labelled_campus_pairs.csv`
 
-### `synthetic_campus_reports.csv`
+### `data/raw/campus/synthetic_campus_reports.csv`
 
 This file contains 46 reports:
 
@@ -119,7 +119,7 @@ The dataset intentionally includes:
 - Nearby but not identical locations.
 - Close report times.
 
-### `labelled_campus_pairs.csv`
+### `data/raw/campus/labelled_campus_pairs.csv`
 
 This file contains 32 labelled lost-found pairs:
 
