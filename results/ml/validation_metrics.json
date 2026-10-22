@@ -18,49 +18,26 @@
       "train_pairs": 19,
       "validation_pairs": 5,
       "validation_lost_ids": [
-        "lost-002",
-        "lost-005"
+        "lost-004",
+        "lost-011"
       ],
-      "precision": 1.0,
+      "precision": 0.5,
       "recall": 1.0,
-      "f1": 1.0,
+      "f1": 0.6666666666666666,
       "confusion_matrix": [
         [
-          3,
-          0
+          1,
+          2
         ],
         [
           0,
           2
         ]
       ],
-      "roc_auc": 1.0
-    },
-    {
-      "fold": 2,
-      "train_pairs": 19,
-      "validation_pairs": 5,
-      "validation_lost_ids": [
-        "lost-001",
-        "lost-006"
-      ],
-      "precision": 1.0,
-      "recall": 0.5,
-      "f1": 0.6666666666666666,
-      "confusion_matrix": [
-        [
-          3,
-          0
-        ],
-        [
-          1,
-          1
-        ]
-      ],
       "roc_auc": 0.8333333333333334
     },
     {
-      "fold": 3,
+      "fold": 2,
       "train_pairs": 19,
       "validation_pairs": 5,
       "validation_lost_ids": [
@@ -83,27 +60,50 @@
       "roc_auc": 1.0
     },
     {
+      "fold": 3,
+      "train_pairs": 19,
+      "validation_pairs": 5,
+      "validation_lost_ids": [
+        "lost-002",
+        "lost-006"
+      ],
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "confusion_matrix": [
+        [
+          3,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    {
       "fold": 4,
       "train_pairs": 19,
       "validation_pairs": 5,
       "validation_lost_ids": [
-        "lost-004",
-        "lost-011"
+        "lost-001",
+        "lost-005"
       ],
-      "precision": 0.5,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1": 0.6666666666666666,
+      "f1": 1.0,
       "confusion_matrix": [
         [
-          1,
-          2
+          3,
+          0
         ],
         [
           0,
           2
         ]
       ],
-      "roc_auc": 0.8333333333333334
+      "roc_auc": 1.0
     },
     {
       "fold": 5,

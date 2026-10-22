@@ -35,7 +35,7 @@ python -m scripts.run_cat2
 jupyter notebook LogisticRegression_Base.ipynb
 ```
 
-The classifier command needs only the tracked campus files. For the full notebook, first download the Delhi Metro CSV as described in `docs/DATASET.md`, save it at `data/raw/delhi/delhimetrorail.csv`, and verify its SHA-256 hash. Run the notebook from first cell to last. `python -m scripts.run_cat2` regenerates the cleaned campus copy, `data/processed/modelling_pairs.csv`, grouped split, predictions, coefficients and `results/ml/validation_metrics.json`. Matplotlib creates EDA figures when installed. The current execution environment has pandas/scikit-learn but lacks Matplotlib/Jupyter, so the numeric notebook cells were executed here and figure creation must be verified in a full environment.
+The classifier command needs only the tracked campus files. For the full notebook, first download the Delhi Metro CSV as described in `docs/DATASET.md`, save it at `data/raw/delhi/delhimetrorail.csv`, and verify its SHA-256 hash. Run the notebook from first cell to last. `python -m scripts.run_cat2` regenerates the cleaned campus copy, `data/processed/modelling_pairs.csv`, grouped split, predictions, coefficients and `results/ml/validation_metrics.json`. On 22 October 2026, all 11 code cells completed without errors in a local Python environment with the declared dependencies. The four EDA figures rendered in the notebook and were saved under `results/figures/`. A fresh clone still needs the separately obtained Delhi CSV for a full rerun.
 
 To check the original rule-based baseline and available tests:
 
@@ -52,7 +52,7 @@ uvicorn matching_system.api:app --reload
 
 **Implemented:** raw-data preparation, pair features, offline Logistic Regression training and grouped validation, synthetic test evaluation, rule-based matcher and prototype API.
 
-**Partially implemented:** EDA figures require Matplotlib locally; labels have not had independent review.
+**Partially implemented:** labels have not had independent review; the four EDA figures are verified for the local dataset but depend on the separately obtained Delhi CSV for reproduction.
 
 **Planned:** real-campus evaluation, image pairs and CLIP features, model comparison, durable backend and Android integration.
 
