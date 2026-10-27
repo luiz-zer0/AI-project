@@ -1,5 +1,13 @@
 # Dataset provenance and use
 
+## Current Delhi experiment
+
+The current `LogisticRegression_Base.ipynb` uses the original Delhi found-item CSV as a **real source for cleaning and EDA**. The local raw file remains `data/raw/delhi/delhimetrorail.csv`; its SHA-256 is documented below. `scripts/prepare_delhi_data.py` keeps all 13,713 source rows, writes a cleaned local copy at `data/processed/delhi_metro.csv`, and records missing values, duplicates, whitespace changes and date parsing in `data/processed/delhi_preprocessing_report.json`. The raw file is never overwritten.
+
+`scripts/create_delhi_experiment.py` uses seed 42 to create 120 **synthetic lost claims** from selected real found rows. It generates 360 constructed pairs: 120 positives linked to their source rows, 120 assumed same-name negatives, and 120 assumed other-name negatives. The outputs are `data/processed/synthetic_delhi_lost_claims.csv`, `data/processed/delhi_labelled_pairs.csv`, `data/processed/delhi_modelling_pairs.csv`, and `data/processed/delhi_split.json`. These row-level files and `results/delhi_experiment/` are Git-ignored. The notebook's four `delhi_*.png` figures are aggregate counts only.
+
+The source has no linked lost reports or verified handovers. A different source row is **not proof of a different physical item**. Lost dates and some lost locations are invented; colour stays empty because there is no reliable source colour field. The Delhi results therefore measure a constructed exercise, not matching accuracy for real Delhi passengers or Strathmore students. The earlier synthetic campus dataset documented below remains a separate baseline.
+
 Accessed source pages on 14 October 2026. The repository's CSV acquisition dates and original survey export location are unknown. Campus raw CSV bytes were preserved while moving the files under `data/raw/`; generated files live under `data/processed/`. The Delhi CSV is excluded from this branch's new commits.
 
 ## University requirements survey
@@ -39,5 +47,5 @@ Accessed source pages on 14 October 2026. The repository's CSV acquisition dates
 
 - Source: repository-authored synthetic ground truth in `data/raw/campus/labelled_campus_pairs.csv` (SHA-256 `e025ff08ce02905e0a75fb8adbf570d8a8db0fade2056be0787a1b9ae34dda9`), 32 pairs: 14 `match`, 8 `plausible`, 10 `non_match`. Original creator/reviewer and licence are unknown. No labels were changed. CAT 2 maps `plausible` to class 0 as an assumption and checks the result with those rows excluded; they are not independently confirmed different items.
 - Fields: lost/found IDs, label, `match_type`, and rationale notes. See [LABELLING_GUIDE.md](LABELLING_GUIDE.md). All 14 lost reports have one intended match, but most possible lost-found combinations have no label.
-- `scripts/split_campus_data.py` uses seed 42 and groups a lost report with its labelled found candidates. The manifest has 10 development lost reports/24 pairs and 4 test lost reports/8 pairs; the sets of found IDs do not overlap. The CAT 2 Logistic Regression experiment now trains on development pairs and checks the eight held-out synthetic pairs. The small split is only a prototype check.
-- The matching weights existed before the split and may have been informed by the synthetic examples. Therefore, the current held-out numbers are a reproducible partition, **not evidence of a prospectively untouched test**. Freeze future tuning to development cases and collect new independent test cases.
+- `scripts/split_campus_data.py` uses seed 42 and groups a lost report with its labelled found candidates. The manifest has 10 development lost reports/24 pairs and 4 test lost reports/8 pairs; the sets of found IDs do not overlap. This is the **older campus baseline**, separate from the current Delhi notebook.
+- The older matching weights existed before that split and may have been informed by the synthetic examples. Therefore, those campus held-out numbers are a reproducible partition, **not evidence of a prospectively untouched test**. Freeze future tuning to development cases and collect new independent test cases.

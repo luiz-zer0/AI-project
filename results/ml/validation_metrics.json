@@ -2,10 +2,10 @@
   "definition": "AI Application: Classification; Algorithm/Approach: Logistic Regression",
   "target_mapping": {
     "match": 1,
-    "plausible": 0,
-    "non_match": 0
+    "non_match": 0,
+    "plausible": 0
   },
-  "label_caution": "Plausible means unconfirmed; class 0 is a coursework assumption, not verified non-identity.",
+  "label_caution": "Plausible means unconfirmed; class 0 is a coursework assumption.",
   "split": {
     "development_pairs": 24,
     "test_pairs": 8,
@@ -164,9 +164,8 @@
     "roc_auc": 1.0
   },
   "limitations": [
-    "Small synthetic labelled sample",
-    "No independent campus field test",
-    "Original labels lack independent review",
-    "Fixed split was created after earlier rule-based work"
+    "Designed or constructed pair labels are not verified real handovers",
+    "No independent real lost-and-found field test",
+    "Grouped validation does not remove label-provenance limitations"
   ]
 }

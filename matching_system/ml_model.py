@@ -78,26 +78,31 @@ def run_experiment(table_path: Path, split_path: Path, results_dir: Path) -> dic
                                  "standardized_coefficient": classifier.named_steps["logisticregression"].coef_[0]})
     coefficients = coefficients.sort_values("standardized_coefficient", ascending=False)
 
-    # Sensitivity check: uncertain 'plausible' labels are excluded in both partitions.
-    clear_dev = development[development.original_label != "plausible"]
-    clear_test = test[test.original_label != "plausible"]
-    clear_classifier = new_classifier().fit(clear_dev[list(FEATURE_NAMES)], clear_dev.target)
-    clear_probabilities = clear_classifier.predict_proba(clear_test[list(FEATURE_NAMES)])[:, 1]
-    sensitivity = {"development_pairs": len(clear_dev), "test_pairs": len(clear_test),
-                   **metrics(clear_test.target, clear_probabilities)}
+    # The older campus dataset has uncertain 'plausible' labels; Delhi pairs do not.
+    sensitivity = None
+    if "plausible" in set(table.original_label):
+        clear_dev = development[development.original_label != "plausible"]
+        clear_test = test[test.original_label != "plausible"]
+        clear_classifier = new_classifier().fit(clear_dev[list(FEATURE_NAMES)], clear_dev.target)
+        clear_probabilities = clear_classifier.predict_proba(clear_test[list(FEATURE_NAMES)])[:, 1]
+        sensitivity = {"development_pairs": len(clear_dev), "test_pairs": len(clear_test),
+                       **metrics(clear_test.target, clear_probabilities)}
 
     results_dir.mkdir(parents=True, exist_ok=True)
     predictions.to_csv(results_dir / "test_predictions.csv", index=False)
     coefficients.to_csv(results_dir / "coefficients.csv", index=False)
     result = {"definition": "AI Application: Classification; Algorithm/Approach: Logistic Regression",
-              "target_mapping": {"match": 1, "plausible": 0, "non_match": 0},
-              "label_caution": "Plausible means unconfirmed; class 0 is a coursework assumption, not verified non-identity.",
+              "target_mapping": {label: int(table.loc[table.original_label == label, "target"].iloc[0])
+                                 for label in sorted(table.original_label.unique())},
+              "label_caution": ("Plausible means unconfirmed; class 0 is a coursework assumption."
+                                if sensitivity else "Constructed positives and assumed negatives are not verified handovers."),
               "split": {"development_pairs": len(development), "test_pairs": len(test),
                         "development_lost_reports": development.lost_report_id.nunique(),
                         "test_lost_reports": test.lost_report_id.nunique()},
               "grouped_cv": fold_results, "held_out_test": metrics(test.target, probabilities),
               "plausible_excluded_sensitivity": sensitivity,
-              "limitations": ["Small synthetic labelled sample", "No independent campus field test",
-                              "Original labels lack independent review", "Fixed split was created after earlier rule-based work"]}
+              "limitations": ["Designed or constructed pair labels are not verified real handovers",
+                              "No independent real lost-and-found field test",
+                              "Grouped validation does not remove label-provenance limitations"]}
     (results_dir / "validation_metrics.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     return result
